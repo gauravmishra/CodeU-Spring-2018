@@ -38,7 +38,7 @@
 
       <h1>About Our CodeU Chat App</h1>
       <p>
-        We are Team 5! Our team members are:
+        We are Team 5 - Five Guys! Our team members are:
       </p>
 
       <ul>

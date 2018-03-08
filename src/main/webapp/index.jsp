@@ -37,7 +37,7 @@
     <div
       style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
 
-      <h1>CodeU Team 5 Chat App</h1>
+      <h1>CodeU Team 5 / Five Guys Chat App</h1>
       <h2>Welcome!</h2>
 
       <ul>
