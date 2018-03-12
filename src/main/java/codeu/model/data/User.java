@@ -21,33 +21,49 @@ import java.util.UUID;
 public class User {
   private final UUID id;
   private final String name;
+  private final String password;
   private final Instant creation;
 
   /**
    * Constructs a new User.
    *
-   * @param id the ID of this User
-   * @param name the username of this User
+   * @param id       the ID of this User
+   * @param name     the username of this User
+   * @param password the password of this User
    * @param creation the creation time of this User
    */
-  public User(UUID id, String name, Instant creation) {
+  public User(UUID id, String name, String password, Instant creation) {
     this.id = id;
     this.name = name;
+    this.password = password;
     this.creation = creation;
   }
 
-  /** Returns the ID of this User. */
+  /**
+   * Returns the ID of this User.
+   */
   public UUID getId() {
     return id;
   }
 
-  /** Returns the username of this User. */
+  /**
+   * Returns the username of this User.
+   */
   public String getName() {
     return name;
   }
 
-  /** Returns the creation time of this User. */
+  /**
+   * Returns the creation time of this User.
+   */
   public Instant getCreationTime() {
     return creation;
+  }
+
+  /**
+   * Returns the password of this User.
+   */
+  public String getPassword() {
+    return password;
   }
 }
