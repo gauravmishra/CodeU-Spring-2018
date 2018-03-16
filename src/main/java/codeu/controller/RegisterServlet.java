@@ -15,7 +15,6 @@ public class RegisterServlet extends HttpServlet {
  @Override
  public void doGet(HttpServletRequest request, HttpServletResponse response)
      throws IOException, ServletException {
-
-   response.getWriter().println("RegisterServlet GET request.");
+   request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request,response);
  }
 }
