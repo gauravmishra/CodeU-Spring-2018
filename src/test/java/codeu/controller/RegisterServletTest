@@ -1,0 +1,40 @@
+package codeu.controller;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+public class RegisterServletTest {
+
+ private RegisterServlet registerServlet;
+ private HttpServletRequest mockRequest;
+ private PrintWriter mockPrintWriter;
+ private HttpServletResponse mockResponse;
+
+ @Before
+ /**
+ * creates new registerservlet object and then creates mock objects
+ */
+ public void setup() throws IOException {
+   registerServlet = new RegisterServlet();
+   mockRequest = Mockito.mock(HttpServletRequest.class);
+   mockPrintWriter = Mockito.mock(PrintWriter.class);
+   mockResponse = Mockito.mock(HttpServletResponse.class);
+   Mockito.when(mockResponse.getWriter()).thenReturn(mockPrintWriter);
+ }
+
+ @Test
+ /**
+ * Prints a test message to verify whether or not the registerServlet is receiving
+ * the valid responses and requests
+ */
+ public void testDoGet() throws IOException, ServletException {
+   registerServlet.doGet(mockRequest, mockResponse);
+   Mockito.verify(mockPrintWriter).println("<h1>RegisterServlet GET request.</h1>");
+ }
+}
