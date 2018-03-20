@@ -18,6 +18,8 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;

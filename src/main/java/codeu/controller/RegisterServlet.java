@@ -2,6 +2,8 @@ package codeu.controller;
 
 import codeu.model.store.basic.UserStore;
 import codeu.model.data.User;
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.time.Instant;
 import java.util.UUID;
 import java.io.IOException;
