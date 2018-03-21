@@ -14,6 +14,7 @@
 
 package codeu.controller;
 
+import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -39,7 +40,7 @@ public class RegisterServletTest {
     mockRequest = Mockito.mock(HttpServletRequest.class);
     mockResponse = Mockito.mock(HttpServletResponse.class);
     mockRequestDispatcher = Mockito.mock(RequestDispatcher.class);
-    Mockito.when(mockResponse.getRequestDispatcher("/WEB-INF/view/register.jsp")).thenReturn(mockRequestDispatcher);
+    Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/register.jsp")).thenReturn(mockRequestDispatcher);
   }
 
   @Test
@@ -59,7 +60,7 @@ public class RegisterServletTest {
   public void testDoPost_BadUsername() throws IOException, ServletException {
     Mockito.when(mockRequest.getParameter("username")).thenReturn("bad !@#$% username");
 
-    loginServlet.doPost(mockRequest, mockResponse);
+    registerServlet.doPost(mockRequest, mockResponse);
 
     Mockito.verify(mockRequest)
         .setAttribute("error", "Please enter only letters, numbers, and spaces.");
@@ -76,7 +77,7 @@ public class RegisterServletTest {
     UserStore mockUserStore = Mockito.mock(UserStore.class);
     Mockito.when(mockUserStore.isUserRegistered("existing username")).thenReturn(true);
     Mockito.verify(mockRequest).setAttribute("error", "That username is already taken.");
-    Mockito.verify(mockRequestDispatcher.forward(mockRequest,mockResponse));
+    Mockito.verify(mockRequestDispatcher).forward(mockRequest,mockResponse);
 
 
   }
