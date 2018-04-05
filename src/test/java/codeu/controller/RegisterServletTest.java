@@ -14,13 +14,18 @@
 
 package codeu.controller;
 
+import codeu.model.data.User;
+import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.mindrot.jbcrypt.BCrypt;
 import org.mockito.Mockito;
 
 public class RegisterServletTest {
@@ -39,7 +44,7 @@ public class RegisterServletTest {
     mockRequest = Mockito.mock(HttpServletRequest.class);
     mockResponse = Mockito.mock(HttpServletResponse.class);
     mockRequestDispatcher = Mockito.mock(RequestDispatcher.class);
-    Mockito.when(mockResponse.getRequestDispatcher("/WEB-INF/view/register.jsp")).thenReturn(mockRequestDispatcher);
+    Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/register.jsp")).thenReturn(mockRequestDispatcher);
   }
 
   @Test
@@ -59,7 +64,7 @@ public class RegisterServletTest {
   public void testDoPost_BadUsername() throws IOException, ServletException {
     Mockito.when(mockRequest.getParameter("username")).thenReturn("bad !@#$% username");
 
-    loginServlet.doPost(mockRequest, mockResponse);
+    registerServlet.doPost(mockRequest, mockResponse);
 
     Mockito.verify(mockRequest)
         .setAttribute("error", "Please enter only letters, numbers, and spaces.");
@@ -72,12 +77,21 @@ public class RegisterServletTest {
   @Test
   public void testDoPost_ExistingUser() throws IOException, ServletException {
     Mockito.when(mockRequest.getParameter("username")).thenReturn("existing username");
+    Mockito.when(mockRequest.getParameter("password")).thenReturn("existing password");
 
     UserStore mockUserStore = Mockito.mock(UserStore.class);
     Mockito.when(mockUserStore.isUserRegistered("existing username")).thenReturn(true);
-    Mockito.verify(mockRequest).setAttribute("error", "That username is already taken.");
-    Mockito.verify(mockRequestDispatcher.forward(mockRequest,mockResponse));
+    registerServlet.setUserStore(mockUserStore);
 
+    HttpSession mockSession = Mockito.mock(HttpSession.class);
+    Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
+
+    registerServlet.doPost(mockRequest, mockResponse);
+
+    Mockito.verify(mockUserStore, Mockito.never()).addUser(Mockito.any(User.class));
+
+    Mockito.verify(mockRequest).setAttribute("error", "That username is already taken.");
+    Mockito.verify(mockRequestDispatcher).forward(mockRequest,mockResponse);
 
   }
 }
