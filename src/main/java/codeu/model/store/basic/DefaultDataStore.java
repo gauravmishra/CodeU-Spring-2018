@@ -18,6 +18,8 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -98,7 +100,10 @@ public class DefaultDataStore {
     Collections.shuffle(randomUsernames);
 
     for (int i = 0; i < DEFAULT_USER_COUNT; i++) {
-      User user = new User(UUID.randomUUID(), randomUsernames.get(i), Instant.now());
+      User user = new User(UUID.randomUUID(),
+          randomUsernames.get(i),
+          BCrypt.hashpw("password", BCrypt.gensalt()),
+          Instant.now());
       PersistentStorageAgent.getInstance().writeThrough(user);
       users.add(user);
     }
