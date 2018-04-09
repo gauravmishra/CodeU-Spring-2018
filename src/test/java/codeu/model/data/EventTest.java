@@ -17,4 +17,16 @@ public class EventTest {
         Assert.assertEquals(event.getLink(), link);
         Assert.assertEquals(event.getType(), eType);
     }
+
+    @Test
+    public void testCreateWithoutLink() {
+        Instant creation = Instant.now();
+        Event.EventType eType = Event.EventType.NewMessage;
+        Event event = new Event(eType, creation);
+
+        Assert.assertEquals(event.getTimeStamp(), creation);
+        Assert.assertEquals(event.getType(), eType);
+        Assert.assertEquals(event.getLink(), "");
+    }
+
 }

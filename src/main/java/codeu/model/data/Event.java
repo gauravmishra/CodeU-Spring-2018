@@ -34,7 +34,7 @@ public class Event {
      * @param type          the type of this event
      * @param timeStamp     the time at which this event happened
      */
-    public Event(EventType type , Instant timeStamp) {
+    public Event(EventType type, Instant timeStamp) {
         this.type = type;
         this.timeStamp = timeStamp;
     }
@@ -47,8 +47,17 @@ public class Event {
         this.type = type;
     }
 
+    /**
+     *
+     * @return a string that points to the link if one exists,
+     * otherwise returns an empty string ""
+     */
     public String getLink() {
-        return link;
+        if(link!=null) {
+            return link;
+        } else {
+            return "";
+        }
     }
 
     public void setLink(String link) {
