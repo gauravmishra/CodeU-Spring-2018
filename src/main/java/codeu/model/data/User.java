@@ -15,7 +15,7 @@
 package codeu.model.data;
 
 import java.time.Instant;
-import java.util.UUID;
+import java.util.*;
 
 /** Class representing a registered user. */
 public class User {
@@ -23,6 +23,8 @@ public class User {
   private final String name;
   private final String password;
   private final Instant creation;
+
+  private List<String> following;
 
   /**
    * Constructs a new User.
@@ -37,6 +39,16 @@ public class User {
     this.name = name;
     this.password = password;
     this.creation = creation;
+    this.following = new ArrayList<>();
+  }
+
+  public User(UUID id, String name, String password, Instant creation, String followingString) {
+    this.id = id;
+    this.name = name;
+    this.password = password;
+    this.creation = creation;
+    this.following = new ArrayList<>();
+    this.following.addAll(Arrays.asList(followingString.split(",")));
   }
 
   /**
@@ -66,4 +78,18 @@ public class User {
   public String getPassword() {
     return password;
   }
+
+  public List<String> getFollowing() {
+    return following;
+  }
+
+  public String getFollowingUsersString () {
+    StringJoiner sj = new StringJoiner(",");
+    for(String s: following) {
+      sj.add(s);
+    }
+    return sj.toString();
+  }
+
+
 }
