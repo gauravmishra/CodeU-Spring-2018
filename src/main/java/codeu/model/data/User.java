@@ -21,7 +21,7 @@ import java.util.UUID;
 public class User {
   private final UUID id;
   private final String name;
-  private final String password;
+  private String password;
   private final Instant creation;
 
   /**
@@ -59,6 +59,11 @@ public class User {
   public Instant getCreationTime() {
     return creation;
   }
+
+  /**
+   * Resets the password of this User.
+   */
+  public void setPassword(String password) { this.password = password; }
 
   /**
    * Returns the password of this User.

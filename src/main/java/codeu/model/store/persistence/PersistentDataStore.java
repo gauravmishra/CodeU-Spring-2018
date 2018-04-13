@@ -17,6 +17,7 @@ package codeu.model.store.persistence;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
+import codeu.model.data.Profile;
 import codeu.model.store.persistence.PersistentDataStoreException;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -175,5 +176,19 @@ public class PersistentDataStore {
     conversationEntity.setProperty("title", conversation.getTitle());
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
     datastore.put(conversationEntity);
+  }
+
+  /** Write a Profile object to the Datastore service. */
+  public void writeThrough(Profile profile) {
+    Entity profileEntity = new Entity("chat-profiles");
+    profileEntity.setProperty("uuid", profile.getId().toString());
+    profileEntity.setProperty("username", profile.getName());
+    profileEntity.setProperty("password", profile.getPassword());
+    profileEntity.setProperty("creation_time", profile.getCreationTime()
+            .toString());
+    profileEntity.setProperty("about", profile.getAbout());
+    profileEntity.setProperty("message_history", profile.getMessages());
+    profileEntity.setProperty("photo", profile.getPhoto());
+    datastore.put(profileEntity);
   }
 }
