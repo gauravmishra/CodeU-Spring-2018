@@ -88,10 +88,10 @@ public class UserStore {
   /**
    * @return the users that the requesting user is following
    */
-  public String getFollowing(String username) {
-    User user = getUser(username);
-    return user.getFollowingUsersString();
-  }
+//  public String getFollowing(String username) {
+//    User user = getUser(username);
+//    return user.getFollowingUsersString();
+//  }
 
   /**
    * Access the User object with the given UUID.

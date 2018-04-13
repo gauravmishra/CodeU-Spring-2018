@@ -66,7 +66,9 @@ public class PersistentDataStore {
         String userName = (String)entity.getProperty("username");
         String password = (String)entity.getProperty("password");
         Instant creationTime = Instant.parse((String)entity.getProperty("creation_time"));
-        String following = (String)entity.getProperty("following");
+        String following = "";
+        if(entity.hasProperty("following"))
+          following = (String)entity.getProperty("following");
         User user = new User(uuid, userName, password, creationTime, following);
         users.add(user);
       } catch (Exception e) {
@@ -154,7 +156,7 @@ public class PersistentDataStore {
     userEntity.setProperty("username", user.getName());
     userEntity.setProperty("password", user.getPassword());
     userEntity.setProperty("creation_time", user.getCreationTime().toString());
-    userEntity.setProperty("following", user.getFollowingUsersString());
+//    userEntity.setProperty("following", user.getFollowingUsersString());
     datastore.put(userEntity);
   }
 
