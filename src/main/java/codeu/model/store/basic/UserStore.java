@@ -17,6 +17,7 @@ package codeu.model.store.basic;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -88,9 +89,9 @@ public class UserStore {
   /**
    * @return the users that the requesting user is following
    */
-  public String getFollowing(String username) {
+  public List<String> getFollowing(String username) {
     User user = getUser(username);
-    return user.getFollowingUsersString();
+    return Arrays.asList(user.getFollowingUsersString().split(","));
   }
 
   /**
