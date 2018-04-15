@@ -14,13 +14,15 @@ public class NewMessageEvent extends Event {
      * @param userName           name of the user who loggedIn/loggedOut
      * @param userLink           link to the profile of the user who loggedIn/loggedOut
      * @param timeStamp          the time at which this event happened
+     * @param eventType             the type of the instance of event
      * @param conversationName   the name of the conversation at which the message was sent
      * @param conversationLink   the link to the conversation at which the message was sent
      */
-    public NewMessageEvent(String userName, String userLink, Instant timeStamp, String conversationName, String conversationLink) {
+    public NewMessageEvent(String userName, String userLink, Instant timeStamp, String eventType, String conversationName, String conversationLink) {
         this.userName = userName;
         this.userLink = userLink;
         super.timeStamp = timeStamp;
+        super.eventType = eventType;
         this.conversationName = conversationName;
         this.conversationLink = conversationLink;
     }

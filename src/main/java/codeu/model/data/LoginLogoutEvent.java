@@ -15,12 +15,14 @@ public class LoginLogoutEvent extends Event {
      * @param userName      name of the user who logged in/logged out
      * @param userLink      link to the profile of the user who logged in/logged out
      * @param timeStamp     the time at which this event happened
+     * @param eventType             the type of the instance of event
      * @param inOrOut       determines if the user logged in or logged out
      */
-    public LoginLogoutEvent(String userName, String userLink, Instant timeStamp, boolean inOrOut) {
+    public LoginLogoutEvent(String userName, String userLink, Instant timeStamp, String eventType, boolean inOrOut) {
         this.userName = userName;
         this.userLink = userLink;
         super.timeStamp = timeStamp;
+        super.eventType = eventType;
         this.inOrOut = inOrOut;
     }
 

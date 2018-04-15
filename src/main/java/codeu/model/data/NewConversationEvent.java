@@ -10,12 +10,13 @@ public class NewConversationEvent extends Event {
      * Constructs a new event that displays newly created conversations.
      *
      * @param timeStamp             the time at which this event happened
+     * @param eventType             the type of the instance of event
      * @param conversationName      name of the conversation created
      * @param conversationLink      link to the conversation created
-
      */
-    public NewConversationEvent(Instant timeStamp, String conversationName, String conversationLink) {
+    public NewConversationEvent(Instant timeStamp, String eventType, String conversationName, String conversationLink) {
         super.timeStamp = timeStamp;
+        super.eventType = eventType;
         this.conversationName = conversationName;
         this.conversationLink = conversationLink;
     }

@@ -12,11 +12,13 @@ public class NewUserEvent extends Event {
      * @param userName      name of the user who registered
      * @param userLink      link to the profile of the user who registered
      * @param timeStamp     the time at which this event happened
+     * @param eventType             the type of the instance of event
      */
-    public NewUserEvent(String userName, String userLink, Instant timeStamp) {
+    public NewUserEvent(String userName, String userLink, Instant timeStamp, String eventType) {
         this.userName = userName;
         this.userLink = userLink;
         super.timeStamp = timeStamp;
+        super.eventType = eventType;
     }
 
     public String getUserName() {
