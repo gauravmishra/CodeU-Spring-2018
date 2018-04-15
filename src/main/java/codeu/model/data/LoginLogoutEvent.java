@@ -4,7 +4,7 @@ import java.time.Instant;
 
 public class LoginLogoutEvent extends Event {
     public static boolean LOGGED_OUT = false;
-    public static boolean LOGGED_INo = true;
+    public static boolean LOGGED_IN = true;
     private String userName;
     private String userLink;
     private boolean inOrOut;
