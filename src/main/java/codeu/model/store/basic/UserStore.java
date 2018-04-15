@@ -91,7 +91,12 @@ public class UserStore {
    */
   public List<String> getFollowing(String username) {
     User user = getUser(username);
-    return Arrays.asList(user.getFollowingUsersString().split(","));
+    System.out.println("The list of the user following is " + user.getFollowingUsersString());
+    System.out.println("The user id of this user is " + user.getId());
+    if(user.getFollowingUsersString().equals(""))
+      return new ArrayList<>();
+    else
+      return Arrays.asList(user.getFollowingUsersString().split(","));
   }
 
   /**
@@ -110,7 +115,17 @@ public class UserStore {
 
   /** Add a new user to the current set of users known to the application. */
   public void addUser(User user) {
-    users.add(user);
+    boolean userExists = false;
+    for(User u: users) {
+      if(u.getId().toString().equals(user.getId().toString())) {
+        u.setFollowing(user.getFollowing());
+        userExists = true;
+        break;
+      }
+    }
+    if(!userExists) {
+      users.add(user);
+    }
     persistentStorageAgent.writeThrough(user);
   }
 

@@ -34,13 +34,6 @@ public class User {
    * @param password the password of this User
    * @param creation the creation time of this User
    */
-  public User(UUID id, String name, String password, Instant creation) {
-    this.id = id;
-    this.name = name;
-    this.password = password;
-    this.creation = creation;
-    this.following = new ArrayList<>();
-  }
 
   public User(UUID id, String name, String password, Instant creation, String followingString) {
     this.id = id;
@@ -91,5 +84,7 @@ public class User {
     return sj.toString();
   }
 
-
+  public void setFollowing(List<String> following) {
+    this.following = following;
+  }
 }

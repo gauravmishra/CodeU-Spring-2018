@@ -62,8 +62,10 @@ public class FollowingServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
-        String username = request.getParameter("username");
-        List<String> following = userStore.getFollowing(username);
+        String username = (String) request.getSession().getAttribute("user");
+        List<String> following = new ArrayList<>();
+        if(username!=null && !username.isEmpty())
+            following = userStore.getFollowing(username);
         request.setAttribute("following", following);
         request.getRequestDispatcher("/WEB-INF/view/following.jsp").forward(request, response);
     }
@@ -76,26 +78,51 @@ public class FollowingServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
+    	String username = (String) request.getSession().getAttribute("user");
+			List<String> following = new ArrayList<>();
+			if(username!=null && !username.isEmpty()) {
+				following = userStore.getFollowing(username);
+			}
+			request.setAttribute("following", following);
 
-        String username = (String) request.getSession().getAttribute("user");
-        if (username == null) {
-            // user is not logged in, don't let them follow anybody
-            response.sendRedirect("/login");
-            return;
-        }
+			if (username == null) {
+				// user is not logged in, don't let them follow anybody
+				response.sendRedirect("/login");
+				return;
+			}
 
-        User user = userStore.getUser(username);
-        if (user == null) {
-            // user was not found, don't let them follow anybody
-            System.out.println("User not found: " + username);
-            response.sendRedirect("/login");
-            return;
-        }
-        String followUser = request.getParameter("followUserName");
+			User user = userStore.getUser(username);
+			if (user == null) {
+				// user was not found, don't let them follow anybody
+				response.sendRedirect("/login");
+				return;
+			}
 
-        User newUser = new User(user.getId(), user.getName(), user.getPassword(), user.getCreationTime(), user.getFollowingUsersString() +","+followUser);
+			String followUser = request.getParameter("followUserName");
+      if(!userStore.isUserRegistered(followUser)) {
+        //if the target user is not registered, send error message
+				request.setAttribute("error", "That username was not found.");
+				request.getRequestDispatcher("/WEB-INF/view/following.jsp").forward(request, response);
+				return;
+      }
 
-        userStore.addUser(newUser);
-        response.sendRedirect("/following");
+			if(following.contains(followUser)) {
+				//if the target user is already followed, send error message
+				request.setAttribute("error", "User already followed.");
+				request.getRequestDispatcher("/WEB-INF/view/following.jsp").forward(request, response);
+				return;
+			}
+
+			String newFollowingList;
+      if(user.getFollowingUsersString().equals("") || user.getFollowingUsersString() == null) {
+				newFollowingList = followUser;
+			}
+			else {
+      	newFollowingList = user.getFollowingUsersString() + "," + followUser;
+      }
+
+      User newUser = new User(user.getId(), user.getName(), user.getPassword(), user.getCreationTime(), newFollowingList);
+      userStore.addUser(newUser);
+      response.sendRedirect("/following");
     }
 }

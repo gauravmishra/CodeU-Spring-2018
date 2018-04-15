@@ -68,6 +68,9 @@ public class PersistentDataStore {
         Instant creationTime = Instant.parse((String)entity.getProperty("creation_time"));
         String following = (String)entity.getProperty("following");
         User user = new User(uuid, userName, password, creationTime, following);
+//        System.out.println("UUUUUUUUUUUUUUUUUUUU: " + user.getId());
+//        System.out.println("FFFFFFFFFFFFFFFFFFFF: " + user.getFollowingUsersString());
+//        System.out.println("NNNNNNNNNNNNNNNNNNNN: " + user.getName());
         users.add(user);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -149,7 +152,7 @@ public class PersistentDataStore {
 
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
-    Entity userEntity = new Entity("chat-users");
+    Entity userEntity = new Entity("chat-users", user.getId().toString());
     userEntity.setProperty("uuid", user.getId().toString());
     userEntity.setProperty("username", user.getName());
     userEntity.setProperty("password", user.getPassword());
