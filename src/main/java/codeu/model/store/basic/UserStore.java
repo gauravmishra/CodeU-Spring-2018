@@ -91,8 +91,6 @@ public class UserStore {
    */
   public List<String> getFollowing(String username) {
     User user = getUser(username);
-    System.out.println("The list of the user following is " + user.getFollowingUsersString());
-    System.out.println("The user id of this user is " + user.getId());
     if(user.getFollowingUsersString().equals(""))
       return new ArrayList<>();
     else
