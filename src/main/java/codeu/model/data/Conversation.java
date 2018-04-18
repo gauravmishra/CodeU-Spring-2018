@@ -16,6 +16,8 @@ package codeu.model.data;
 
 import java.time.Instant;
 import java.util.UUID;
+import java.util.List;
+import java.util.ArrayList;
 import codeu.model.data.User;
 
 /**
@@ -28,7 +30,7 @@ public class Conversation {
   public final Instant creation;
   public final String title;
   public final boolean isPrivate;
-  public final List<User> isVisibleTo;
+  public List<User> isVisibleTo = new ArrayList<User>();
 
   /**
    * Constructs a new Conversation.
@@ -43,6 +45,8 @@ public class Conversation {
     this.owner = owner;
     this.creation = creation;
     this.title = title;
+    // sets isPrivate to default false
+    isPrivate = false;
   }
   public Conversation(UUID id, UUID owner, String title, Instant creation, boolean isPrivate, List<User> isVisibleTo) {
     this.id = id;
