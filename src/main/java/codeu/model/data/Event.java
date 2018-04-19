@@ -19,7 +19,7 @@ public abstract class Event {
     	return eventType;
     }
 
-    public void setEventTpye(String eventType){
+    public void setEventType(String eventType){
     	this.eventType = eventType;
     }
 
