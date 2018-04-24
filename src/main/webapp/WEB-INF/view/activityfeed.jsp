@@ -49,7 +49,6 @@ List <Event> events = (List<Event>) request.getAttribute("events");
   		<div id="activityfeed">
   			<ul>
   				<%
-  				User user = (User) UserStore.getInstance().getUser((String) request.getSession().getAttribute("user"));
   				for (Event event : events) {
   					String eventType = event.getEventType();
   					String message = "";
@@ -66,9 +65,11 @@ List <Event> events = (List<Event>) request.getAttribute("events");
   						message = event.toString();
   				}
   				%>
+          <%if (message != "") {
   				<li>
   					<strong><%= message%> </strong>
   				</li>
+          %>
   				<%
   			}
   			%>

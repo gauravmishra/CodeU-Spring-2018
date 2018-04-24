@@ -77,7 +77,17 @@
   </servlet-mapping>
 
   <servlet>
-    <servlet-name>FeedServlet</servlet-name>
+
+ 	<servlet-name>FollowingServlet</servlet-name>
+ 	<servlet-class>codeu.controller.FollowingServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+ 	<servlet-name>FollowingServlet</servlet-name>
+ 	<url-pattern>/following</url-pattern>
+
+  </servlet-mapping>
+      <servlet-name>FeedServlet</servlet-name>
     <servlet-class>codeu.controller.FeedServlet</servlet-class>
   </servlet>
 

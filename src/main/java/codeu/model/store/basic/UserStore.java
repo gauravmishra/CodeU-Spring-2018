@@ -17,6 +17,7 @@ package codeu.model.store.basic;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -84,6 +85,18 @@ public class UserStore {
     return null;
   }
 
+
+  /**
+   * @return the users that the requesting user is following
+   */
+  public List<String> getFollowing(String username) {
+    User user = getUser(username);
+    if(user.getFollowingUsersString().equals(""))
+      return new ArrayList<>();
+    else
+      return Arrays.asList(user.getFollowingUsersString().split(","));
+  }
+
   /**
    * Access the User object with the given UUID.
    *
@@ -100,7 +113,17 @@ public class UserStore {
 
   /** Add a new user to the current set of users known to the application. */
   public void addUser(User user) {
-    users.add(user);
+    boolean userExists = false;
+    for(User u: users) {
+      if(u.getId().toString().equals(user.getId().toString())) {
+        u.setFollowing(user.getFollowing());
+        userExists = true;
+        break;
+      }
+    }
+    if(!userExists) {
+      users.add(user);
+    }
     persistentStorageAgent.writeThrough(user);
   }
 
