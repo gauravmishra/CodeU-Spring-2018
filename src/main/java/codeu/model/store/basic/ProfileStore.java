@@ -14,7 +14,7 @@ import java.util.UUID;
  */
 public class ProfileStore {
 
-    /** Singleton instance of UserStore. */
+    /** Singleton instance of ProfileStore. */
     private static ProfileStore instance;
 
     /**
@@ -44,7 +44,7 @@ public class ProfileStore {
      */
     private PersistentStorageAgent persistentStorageAgent;
 
-    /** The in-memory list of Users. */
+    /** The in-memory list of Profiles. */
     private List<Profile> profiles;
 
     /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
@@ -91,6 +91,14 @@ public class ProfileStore {
      * application.
      * */
     public void addProfile(Profile profile) {
+        //Replaces current profile if present
+        UUID id = profile.getId();
+        for (Profile curProfile : profiles) {
+            if (curProfile.getId().equals(id)) {
+                curProfile = profile;
+                return;
+            }
+        }
         profiles.add(profile);
         persistentStorageAgent.writeThrough(profile);
     }
@@ -98,7 +106,7 @@ public class ProfileStore {
     /** Return true if the given profile is known to the application. */
     public boolean doesProfileExist(String username) {
         for (Profile profile : profiles) {
-            if (profile.getName() == username) {
+            if (profile.getName().equals(username)) {
                 return true;
             }
         }

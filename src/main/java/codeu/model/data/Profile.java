@@ -14,7 +14,7 @@ public class Profile {
     private final String name;
     private String password;
     private String about;
-    private List<String> messages = new ArrayList<String>();
+    private List<Message> messages = new ArrayList<Message>();
     private BufferedImage photo;
 
     /**
@@ -27,11 +27,12 @@ public class Profile {
      * @param photo    User's profile photo
      */
     public Profile(UUID id, Instant creation, String about,
-                   List<String> messages, BufferedImage photo) {
+                   List<Message> messages, BufferedImage photo) {
+        UserStore userStore = UserStore.getInstance();
         this.id = id;
         this.creation = creation;
-        this.name = UserStore.getInstance().getUser(id).getName();
-        this.password = UserStore.getInstance().getUser(id).getPassword();
+        this.name = (userStore.getUser(id)).getName();
+        this.password = (userStore.getUser(id)).getPassword();
         this.about = about;
         this.messages = messages;
         this.photo = photo;
@@ -85,13 +86,13 @@ public class Profile {
     /**
      * Updates the message history of the User whose Profile it is
      */
-    public void setMessages(List<String> messages) { this.messages =
+    public void setMessages(List<Message> messages) { this.messages =
             messages; }
 
     /**
      * Returns the message history of the User whose Profile it is
      */
-    public List<String> getMessages() {
+    public List<Message> getMessages() {
         return messages;
     }
 

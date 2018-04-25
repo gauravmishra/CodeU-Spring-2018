@@ -13,6 +13,18 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
+<%@ page import="java.util.List" %>
+<%@ page import="codeu.model.data.User" %>
+<%@ page import="codeu.model.data.Profile" %>
+<%@ page import="codeu.model.store.basic.ProfileStore" %>
+<%@ page import="java.time.Instant" %>
+<%@ page import="java.util.UUID" %>
+
+<%
+User user = (User) request.getAttribute("profileUser");
+Profile profile = (Profile) request.getAttribute("profile");
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,9 +50,10 @@
     <div
       style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
 
-      <h1>About Our CodeU Chat App</h1>
+      <h1><%= request.getAttribute("profileUser")%></h1>
       <p>
-        We are Team 5 - Five Guys! Our team members are:
+        About:
+        <%= (String) request.getAttribute("about")%>
       </p>
 
       <ul>

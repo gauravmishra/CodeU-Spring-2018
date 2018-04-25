@@ -151,6 +151,21 @@ public class DefaultDataStore {
     }
   }
 
+  private void addRandomMessages(int messageNum, UUID id, List<Message>
+          userMessages) {
+    for (int i = 0; i < messageNum; i++) {
+      Conversation conversation = getRandomElement(conversations);
+      String content = getRandomMessageContent();
+
+      Message message =
+              new Message(
+                      UUID.randomUUID(), conversation.getId(), id, content,
+                      Instant.now());
+      PersistentStorageAgent.getInstance().writeThrough(message);
+      userMessages.add(message);
+    }
+  }
+
   private void addRandomProfiles() {
     String about = getRandomMessageContent();
 
@@ -160,13 +175,15 @@ public class DefaultDataStore {
     } catch(IOException e){
     }
     for (int i = 0; i < DEFAULT_PROFILE_COUNT; i++) {
-      List<String> messages = new ArrayList<String>();
-      //Gives the user a random number of methods between 1 and 50
-      for(i = 0; i < (int)Math.random()*50+1; i++){
-        messages.add(getRandomMessageContent());
-      }
-      Profile profile = new Profile(users.get(i).getId(), Instant.now(),
-      about, messages, photo);
+      List<Message> messages = new ArrayList<Message>();
+      //Gives the user a random number of messages between 1 and 50
+      int numMessages = (int)Math.random()*50+1;
+      User user = getRandomElement(users);
+      List<Message> userMessages = new ArrayList<Message>();
+      addRandomMessages(numMessages, user.getId(), userMessages);
+      Profile profile = new Profile(user.getId(), Instant.now(), about,
+              messages,
+              photo);
       PersistentStorageAgent.getInstance().writeThrough(profile);
       profiles.add(profile);
     }
