@@ -78,9 +78,15 @@ public class ProfileServlet extends HttpServlet {
             throws IOException, ServletException {
         String requestUrl = request.getRequestURI();
         String username = requestUrl.substring("/user/".length());
+        System.out.println(username);
         User user = userStore.getUser(username);
+        System.out.println(user);
 
-        Profile profile = profileStore.getProfile(username);
+        Profile profile = profileStore.getProfile(user.getId());
+              
+        for (Profile p : profileStore.getAllProfiles()) {
+          System.out.println(p.printProfile());
+        }
         if (profile == null) {
             // couldn't find profile, redirect to homepage
             System.out.println("Profile was null: " + username);

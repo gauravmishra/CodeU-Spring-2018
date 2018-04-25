@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 /** Class representing a created profile. */
 public class Profile {
     private final UUID id;
+  private final UUID userId;
     private final Instant creation;
     private final String name;
     private String password;
@@ -26,13 +27,16 @@ public class Profile {
      * @param messages message history
      * @param photo    User's profile photo
      */
-    public Profile(UUID id, Instant creation, String about,
+    public Profile(UUID id, UUID userId, Instant creation, String about,
                    List<Message> messages, BufferedImage photo) {
         UserStore userStore = UserStore.getInstance();
         this.id = id;
+      this.userId = userId;
         this.creation = creation;
-        this.name = (userStore.getUser(id)).getName();
-        this.password = (userStore.getUser(id)).getPassword();
+      this.name = "Def";
+      this.password = "Def";
+        //this.name = (userStore.getUser(id)).getName();
+        //this.password = (userStore.getUser(id)).getPassword();
         this.about = about;
         this.messages = messages;
         this.photo = photo;
@@ -44,6 +48,10 @@ public class Profile {
     public UUID getId() {
         return id;
     }
+  
+  public UUID getUserId() {
+    return userId;
+  }
 
     /**
      * Returns the creation time of this Profile.
@@ -100,6 +108,12 @@ public class Profile {
      * Sets a new profile photo
      */
     public void setPhoto(BufferedImage photo) { this.photo = photo; }
+  
+  public String printProfile() {
+    String a = "";
+    a += id + "  " + name + "  " + password;
+    return a;
+  }
 
     /**
      * Gets the current profile photo

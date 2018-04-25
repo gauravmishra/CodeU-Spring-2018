@@ -181,7 +181,7 @@ public class DefaultDataStore {
       User user = getRandomElement(users);
       List<Message> userMessages = new ArrayList<Message>();
       addRandomMessages(numMessages, user.getId(), userMessages);
-      Profile profile = new Profile(user.getId(), Instant.now(), about,
+      Profile profile = new Profile(UUID.randomUUID(), user.getId(), Instant.now(), about,
               messages,
               photo);
       PersistentStorageAgent.getInstance().writeThrough(profile);

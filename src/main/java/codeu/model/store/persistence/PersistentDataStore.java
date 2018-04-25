@@ -65,8 +65,12 @@ public class PersistentDataStore {
 
     for (Entity entity : results.asIterable()) {
       try {
+        
+
         UUID uuid = UUID.fromString((String)entity.getProperty("uuid"));
+        
         String userName = (String)entity.getProperty("username");
+        System.out.println("Loading user: " + userName);
         String password = (String)entity.getProperty("password");
         Instant creationTime = Instant.parse((String)entity.getProperty("creation_time"));
         User user = new User(uuid, userName, password, creationTime);
@@ -157,6 +161,7 @@ public class PersistentDataStore {
    *     Datastore service
    */
   public List<Profile> loadProfiles() throws PersistentDataStoreException {
+    System.out.println("IS THIS CALLLLLLLLLLLLLLLED?");
 
     List<Profile> profiles = new ArrayList<>();
 
@@ -167,13 +172,16 @@ public class PersistentDataStore {
     for (Entity entity : results.asIterable()) {
       try {
         UUID uuid = UUID.fromString((String)entity.getProperty("uuid"));
+        System.out.println("Loading profile: " + uuid.toString());
+        UUID userid = UUID.fromString((String)entity.getProperty("userid"));
         Instant creationTime = Instant.parse((String)entity.getProperty("creation_time"));
         String about = (String)entity.getProperty("about");
         List<Message> messages = (List<Message>)entity.getProperty
                 ("message_history");
         BufferedImage photo = (BufferedImage)entity.getProperty("photo");
-        Profile profile = new Profile(uuid, creationTime, about, messages,
+        Profile profile = new Profile(uuid, userid, creationTime, about, messages,
                 photo);
+        System.out.println("Loaded profile: " + profile.printProfile());
         profiles.add(profile);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -221,6 +229,7 @@ public class PersistentDataStore {
   public void writeThrough(Profile profile) {
     Entity profileEntity = new Entity("chat-profiles");
     profileEntity.setProperty("uuid", profile.getId().toString());
+    profileEntity.setProperty("userid", profile.getUserId().toString());
     profileEntity.setProperty("creation_time", profile.getCreationTime()
             .toString());
     profileEntity.setProperty("about", profile.getAbout());

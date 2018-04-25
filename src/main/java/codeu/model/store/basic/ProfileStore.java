@@ -66,7 +66,8 @@ public class ProfileStore {
     public Profile getProfile(String username) {
         // This approach will be pretty slow if we have many users.
         for (Profile profile : profiles) {
-            if (profile.getName() == username) {
+          System.out.println("Looking for: " + username + ". Comparing with: " + profile.getName());
+            if (username.equals(profile.getName())) {
                 return profile;
             }
         }
@@ -78,9 +79,10 @@ public class ProfileStore {
      *
      * @return null if the UUID does not match any existing Profile.
      */
-    public Profile getProfile(UUID id) {
+    public Profile getProfile(UUID userId) {
         for (Profile profile : profiles) {
-            if (profile.getId().equals(id)) {
+          System.out.println("Looking for: " + userId + ". Comparing with: " + profile.getUserId());
+            if (profile.getUserId().equals(userId)) {
                 return profile;
             }
         }
@@ -92,6 +94,7 @@ public class ProfileStore {
      * */
     public void addProfile(Profile profile) {
         //Replaces current profile if present
+      System.out.println("Adding profile: " + profile.printProfile());
         UUID id = profile.getId();
         for (Profile curProfile : profiles) {
             if (curProfile.getId().equals(id)) {
@@ -100,7 +103,12 @@ public class ProfileStore {
             }
         }
         profiles.add(profile);
-        persistentStorageAgent.writeThrough(profile);
+      System.out.println("Added profile: " + profile.printProfile());
+      System.out.println("All profiles: ");
+      for (Profile p : profiles) {
+        System.out.println(p.printProfile());
+      }
+      persistentStorageAgent.writeThrough(profile);
     }
 
     /** Return true if the given profile is known to the application. */
@@ -112,6 +120,10 @@ public class ProfileStore {
         }
         return false;
     }
+  
+  public List<Profile> getAllProfiles() {
+    return profiles;
+  }
 
     /**
      * Sets the List of Profiles stored by this ProfileStore. This should only

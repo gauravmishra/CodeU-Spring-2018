@@ -94,8 +94,9 @@ void setProfileStore(ProfileStore profileStore) {
           photo = ImageIO.read(new File("ProfilePic.jpg"));
       } catch(IOException e) {
       }
-  Profile profile = new Profile(user.getId(), Instant.now(), "Welcome to my " +
+  Profile profile = new Profile(UUID.randomUUID(), user.getId(), Instant.now(), "Welcome to my " +
           "profile page!", null, photo);
+       System.out.println(profile.printProfile());
   profileStore.addProfile(profile);
 
 
