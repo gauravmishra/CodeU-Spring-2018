@@ -66,7 +66,7 @@ public class ProfileStore {
     public Profile getProfile(String username) {
         // This approach will be pretty slow if we have many users.
         for (Profile profile : profiles) {
-            if (profile.getName() == username) {
+            if (profile.getName().equals(username)) {
                 return profile;
             }
         }
@@ -93,9 +93,19 @@ public class ProfileStore {
     public void addProfile(Profile profile) {
         //Replaces current profile if present
         UUID id = profile.getId();
-        for (Profile curProfile : profiles) {
-            if (curProfile.getId().equals(id)) {
+//        Profile oldProfile = null;
+//        for (Profile curProfile : profiles) {
+//            if (curProfile.getId().equals(id)) {
+//                oldProfile = curProfile;
+//            }
+//        }
+//        if(oldProfile != null){
+//            profiles.remove(oldProfile);
+//        }
+        for(Profile curProfile : profiles) {
+            if(curProfile.getId().equals(id)){
                 curProfile = profile;
+                persistentStorageAgent.writeThrough(profile);
                 return;
             }
         }

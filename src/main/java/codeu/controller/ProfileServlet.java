@@ -87,11 +87,13 @@ public class ProfileServlet extends HttpServlet {
             response.sendRedirect("/index.jsp");
             return;
         }
+        List<Message> messages = messageStore.getUserMessages(user.getId());
+
         request.setAttribute("profileUser", user);
+        request.setAttribute("username", username);
         request.setAttribute("profile", profile);
         request.setAttribute("about", profile.getAbout());
-        request.setAttribute("messages", messageStore.getUserMessages(user
-                .getId()));
+        request.setAttribute("messages", messages);
         request.setAttribute("photo", profile.getPhoto());
 
         request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request,response);
@@ -103,11 +105,18 @@ public class ProfileServlet extends HttpServlet {
 
         String requestUrl = request.getRequestURI();
         String username = requestUrl.substring("/user/".length());
+        User user = userStore.getUser(username);
+
         Profile profile = profileStore.getProfile(username);
         if (profile == null) {
             // couldn't find profile, redirect to homepage
             response.sendRedirect("/index.jsp");
             return;
+        }
+        if(request.getParameter("update") != null){
+            String newAbout = request.getParameter("newAbout");
+            profile.setAbout(newAbout);
+            profileStore.addProfile(profile);
         }
 
         response.sendRedirect("/user/" + username);
