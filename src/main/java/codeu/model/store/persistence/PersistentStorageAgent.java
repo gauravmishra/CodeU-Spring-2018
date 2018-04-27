@@ -91,8 +91,7 @@ public class PersistentStorageAgent {
   }
 
   /**
-   * Retrieve all Profile objects from the Datastore service. The returned list
-   * may be empty.
+   * Retrieve all Profile objects from the Datastore service. The returned list may be empty.
    *
    * @throws PersistentDataStoreException if an error was detected during the load from the
    *     Datastore service

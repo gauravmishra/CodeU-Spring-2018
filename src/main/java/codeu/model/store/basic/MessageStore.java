@@ -107,9 +107,9 @@ public class MessageStore {
 
     List<Message> userMessages = new ArrayList<>();
 
-    for(Message message : messages) {
+    for (Message message : messages) {
       if (message.getAuthorId().equals(userID)) {
-          userMessages.add(message);
+        userMessages.add(message);
       }
     }
 

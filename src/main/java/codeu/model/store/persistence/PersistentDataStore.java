@@ -24,14 +24,14 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.datastore.Query.FilterOperator;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.awt.image.BufferedImage;
-import com.google.appengine.api.datastore.Query.Filter;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
-import com.google.appengine.api.datastore.Query.FilterOperator;
 
 /**
  * This class handles all interactions with Google App Engine's Datastore service. On startup it
@@ -68,10 +68,10 @@ public class PersistentDataStore {
 
     for (Entity entity : results.asIterable()) {
       try {
-        UUID uuid = UUID.fromString((String)entity.getProperty("uuid"));
-        String userName = (String)entity.getProperty("username");
-        String password = (String)entity.getProperty("password");
-        Instant creationTime = Instant.parse((String)entity.getProperty("creation_time"));
+        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        String userName = (String) entity.getProperty("username");
+        String password = (String) entity.getProperty("password");
+        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         User user = new User(uuid, userName, password, creationTime);
         users.add(user);
       } catch (Exception e) {
@@ -153,8 +153,7 @@ public class PersistentDataStore {
   }
 
   /**
-   * Loads all Profile objects from the Datastore service and returns them in a
-   * List.
+   * Loads all Profile objects from the Datastore service and returns them in a List.
    *
    * @throws PersistentDataStoreException if an error was detected during the load from the
    *     Datastore service
@@ -169,14 +168,12 @@ public class PersistentDataStore {
 
     for (Entity entity : results.asIterable()) {
       try {
-        UUID uuid = UUID.fromString((String)entity.getProperty("uuid"));
-        Instant creationTime = Instant.parse((String)entity.getProperty("creation_time"));
-        String about = (String)entity.getProperty("about");
-        List<Message> messages = (List<Message>)entity.getProperty
-                ("message_history");
-        BufferedImage photo = (BufferedImage)entity.getProperty("photo");
-        Profile profile = new Profile(uuid, creationTime, about, messages,
-                photo);
+        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
+        String about = (String) entity.getProperty("about");
+        List<Message> messages = (List<Message>) entity.getProperty("message_history");
+        BufferedImage photo = (BufferedImage) entity.getProperty("photo");
+        Profile profile = new Profile(uuid, creationTime, about, messages, photo);
         profiles.add(profile);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -222,18 +219,16 @@ public class PersistentDataStore {
 
   /** Write a Profile object to the Datastore service. */
   public void writeThrough(Profile profile) {
-    //Delete profile in entity if already present
-    Filter idFilter = new FilterPredicate("uuid", FilterOperator.EQUAL,
-            profile.getId().toString());
+    // Delete profile in entity if already present
+    Filter idFilter = new FilterPredicate("uuid", FilterOperator.EQUAL, profile.getId().toString());
     Query query = new Query("chat-profiles").setFilter(idFilter);
     PreparedQuery results = datastore.prepare(query);
-    for(Entity entity : results.asIterable()) {
+    for (Entity entity : results.asIterable()) {
       datastore.delete(entity.getKey());
     }
     Entity profileEntity = new Entity("chat-profiles", profile.getId().toString());
     profileEntity.setProperty("uuid", profile.getId().toString());
-    profileEntity.setProperty("creation_time", profile.getCreationTime()
-            .toString());
+    profileEntity.setProperty("creation_time", profile.getCreationTime().toString());
     profileEntity.setProperty("about", profile.getAbout());
     profileEntity.setProperty("message_history", profile.getMessages());
     profileEntity.setProperty("photo", profile.getPhoto());
