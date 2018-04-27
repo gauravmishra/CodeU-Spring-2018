@@ -29,6 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.awt.image.BufferedImage;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.datastore.Query.FilterOperator;
 
 /**
  * This class handles all interactions with Google App Engine's Datastore service. On startup it
@@ -219,6 +222,14 @@ public class PersistentDataStore {
 
   /** Write a Profile object to the Datastore service. */
   public void writeThrough(Profile profile) {
+    //Delete profile in entity if already present
+    Filter idFilter = new FilterPredicate("uuid", FilterOperator.EQUAL,
+            profile.getId().toString());
+    Query query = new Query("chat-profiles").setFilter(idFilter);
+    PreparedQuery results = datastore.prepare(query);
+    for(Entity entity : results.asIterable()) {
+      datastore.delete(entity.getKey());
+    }
     Entity profileEntity = new Entity("chat-profiles", profile.getId().toString());
     profileEntity.setProperty("uuid", profile.getId().toString());
     profileEntity.setProperty("creation_time", profile.getCreationTime()
