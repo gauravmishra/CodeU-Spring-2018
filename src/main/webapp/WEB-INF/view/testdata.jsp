@@ -30,6 +30,9 @@
       <a href="/login">Login</a>
     <% } %>
     <a href="/about.jsp">About</a>
+    <% if(request.getSession().getAttribute("user") != null){ %>
+            <a href="/user/<%= request.getSession().getAttribute("user") %>">Profile</a>
+        <% } %>
   </nav>
 
   <div id="container">

@@ -62,8 +62,8 @@ public class LoginServlet extends HttpServlet {
 
   /**
    * This function fires when a user submits the login form. It gets the username and password from
-   * the submitted form data, checks that they're valid, and either adds the user to the session
-   * so we know the user is logged in or shows an error to the user.
+   * the submitted form data, checks that they're valid, and either adds the user to the session so
+   * we know the user is logged in or shows an error to the user.
    */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -73,16 +73,14 @@ public class LoginServlet extends HttpServlet {
 
     if (userStore.isUserRegistered(username)) {
       User user = userStore.getUser(username);
-      if(BCrypt.checkpw(password, user.getPassword())) {
+      if (BCrypt.checkpw(password, user.getPassword())) {
         request.getSession().setAttribute("user", username);
         response.sendRedirect("/conversations");
-      }
-      else {
+      } else {
         request.setAttribute("error", "Invalid password.");
         request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
       }
-    }
-    else {
+    } else {
       request.setAttribute("error", "That username was not found.");
       request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
     }

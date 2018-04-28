@@ -17,14 +17,20 @@ package codeu.model.store.basic;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
+import codeu.model.data.Profile;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.io.IOError;
+import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
 
 /**
  * This class makes it easy to add dummy data to your chat app instance. To use fake data, set
@@ -55,6 +61,12 @@ public class DefaultDataStore {
    */
   private int DEFAULT_MESSAGE_COUNT = 100;
 
+  /**
+   * Default profile count. Only used if USE_DEFAULT_DATA is true. Make sure this is <= the number
+   * of users
+   */
+  private int DEFAULT_PROFILE_COUNT = 15;
+
   private static DefaultDataStore instance = new DefaultDataStore();
 
   public static DefaultDataStore getInstance() {
@@ -64,17 +76,20 @@ public class DefaultDataStore {
   private List<User> users;
   private List<Conversation> conversations;
   private List<Message> messages;
+  private List<Profile> profiles;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private DefaultDataStore() {
     users = new ArrayList<>();
     conversations = new ArrayList<>();
     messages = new ArrayList<>();
+    profiles = new ArrayList<>();
 
     if (USE_DEFAULT_DATA) {
       addRandomUsers();
       addRandomConversations();
       addRandomMessages();
+      addRandomProfiles();
     }
   }
 
@@ -94,16 +109,22 @@ public class DefaultDataStore {
     return messages;
   }
 
+  public List<Profile> getAllProfiles() {
+    return profiles;
+  }
+
   private void addRandomUsers() {
 
     List<String> randomUsernames = getRandomUsernames();
     Collections.shuffle(randomUsernames);
 
     for (int i = 0; i < DEFAULT_USER_COUNT; i++) {
-      User user = new User(UUID.randomUUID(),
-          randomUsernames.get(i),
-          BCrypt.hashpw("password", BCrypt.gensalt()),
-          Instant.now());
+      User user =
+          new User(
+              UUID.randomUUID(),
+              randomUsernames.get(i),
+              BCrypt.hashpw("password", BCrypt.gensalt()),
+              Instant.now());
       PersistentStorageAgent.getInstance().writeThrough(user);
       users.add(user);
     }
@@ -131,6 +152,39 @@ public class DefaultDataStore {
               UUID.randomUUID(), conversation.getId(), author.getId(), content, Instant.now());
       PersistentStorageAgent.getInstance().writeThrough(message);
       messages.add(message);
+    }
+  }
+
+  private void addRandomMessages(int messageNum, UUID id, List<Message> userMessages) {
+    for (int i = 0; i < messageNum; i++) {
+      Conversation conversation = getRandomElement(conversations);
+      String content = getRandomMessageContent();
+
+      Message message =
+          new Message(UUID.randomUUID(), conversation.getId(), id, content, Instant.now());
+      PersistentStorageAgent.getInstance().writeThrough(message);
+      userMessages.add(message);
+    }
+  }
+
+  private void addRandomProfiles() {
+    String about = getRandomMessageContent();
+
+    BufferedImage photo = null;
+    try {
+      photo = ImageIO.read(new File("ProfilePic.png"));
+    } catch (IOException e) {
+    }
+    for (int i = 0; i < DEFAULT_PROFILE_COUNT; i++) {
+      List<Message> messages = new ArrayList<Message>();
+      // Gives the user a random number of messages between 1 and 50
+      int numMessages = (int) Math.random() * 50 + 1;
+      User user = getRandomElement(users);
+      List<Message> userMessages = new ArrayList<Message>();
+      addRandomMessages(numMessages, user.getId(), userMessages);
+      Profile profile = new Profile(user.getId(), Instant.now(), about, messages, photo);
+      PersistentStorageAgent.getInstance().writeThrough(profile);
+      profiles.add(profile);
     }
   }
 

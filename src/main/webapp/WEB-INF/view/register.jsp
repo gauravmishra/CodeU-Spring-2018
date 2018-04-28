@@ -20,6 +20,9 @@
    <% } else{ %>
      <a href="/login">Login</a>
    <% } %>
+   <% if(request.getSession().getAttribute("user") != null){ %>
+           <a href="/user/<%= request.getSession().getAttribute("user") %>">Profile</a>
+       <% } %>
  </nav>
 
  <div id="container">

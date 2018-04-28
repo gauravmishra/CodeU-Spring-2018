@@ -17,22 +17,28 @@ package codeu.model.store.persistence;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
+import codeu.model.data.Profile;
 import codeu.model.store.persistence.PersistentDataStoreException;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.datastore.Query.FilterOperator;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.awt.image.BufferedImage;
 
 /**
  * This class handles all interactions with Google App Engine's Datastore service. On startup it
  * sets the state of the applications's data objects from the current contents of its Datastore. It
  * also performs writes of new of modified objects back to the Datastore.
  */
+@SuppressWarnings("unchecked")
 public class PersistentDataStore {
 
   // Handle to Google AppEngine's Datastore service.
@@ -62,10 +68,10 @@ public class PersistentDataStore {
 
     for (Entity entity : results.asIterable()) {
       try {
-        UUID uuid = UUID.fromString((String)entity.getProperty("uuid"));
-        String userName = (String)entity.getProperty("username");
-        String password = (String)entity.getProperty("password");
-        Instant creationTime = Instant.parse((String)entity.getProperty("creation_time"));
+        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        String userName = (String) entity.getProperty("username");
+        String password = (String) entity.getProperty("password");
+        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         User user = new User(uuid, userName, password, creationTime);
         users.add(user);
       } catch (Exception e) {
@@ -146,6 +152,40 @@ public class PersistentDataStore {
     return messages;
   }
 
+  /**
+   * Loads all Profile objects from the Datastore service and returns them in a List.
+   *
+   * @throws PersistentDataStoreException if an error was detected during the load from the
+   *     Datastore service
+   */
+  public List<Profile> loadProfiles() throws PersistentDataStoreException {
+
+    List<Profile> profiles = new ArrayList<>();
+
+    // Retrieve all profiles from the datastore.
+    Query query = new Query("chat-profiles");
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
+        String about = (String) entity.getProperty("about");
+        List<Message> messages = (List<Message>) entity.getProperty("message_history");
+        BufferedImage photo = (BufferedImage) entity.getProperty("photo");
+        Profile profile = new Profile(uuid, creationTime, about, messages, photo);
+        profiles.add(profile);
+      } catch (Exception e) {
+        // In a production environment, errors should be very rare. Errors which may
+        // occur include network errors, Datastore service errors, authorization errors,
+        // database entity definition mismatches, or service mismatches.
+        throw new PersistentDataStoreException(e);
+      }
+    }
+
+    return profiles;
+  }
+
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
     Entity userEntity = new Entity("chat-users");
@@ -175,5 +215,23 @@ public class PersistentDataStore {
     conversationEntity.setProperty("title", conversation.getTitle());
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
     datastore.put(conversationEntity);
+  }
+
+  /** Write a Profile object to the Datastore service. */
+  public void writeThrough(Profile profile) {
+    // Delete profile in entity if already present
+    Filter idFilter = new FilterPredicate("uuid", FilterOperator.EQUAL, profile.getId().toString());
+    Query query = new Query("chat-profiles").setFilter(idFilter);
+    PreparedQuery results = datastore.prepare(query);
+    for (Entity entity : results.asIterable()) {
+      datastore.delete(entity.getKey());
+    }
+    Entity profileEntity = new Entity("chat-profiles", profile.getId().toString());
+    profileEntity.setProperty("uuid", profile.getId().toString());
+    profileEntity.setProperty("creation_time", profile.getCreationTime().toString());
+    profileEntity.setProperty("about", profile.getAbout());
+    profileEntity.setProperty("message_history", profile.getMessages());
+    profileEntity.setProperty("photo", profile.getPhoto());
+    datastore.put(profileEntity);
   }
 }
