@@ -202,7 +202,7 @@ public class PersistentDataStore {
 
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
-    Entity userEntity = new Entity("chat-users", user.getId().toString());
+    Entity userEntity = new Entity("chat-users");
     userEntity.setProperty("uuid", user.getId().toString());
     userEntity.setProperty("username", user.getName());
     userEntity.setProperty("password", user.getPassword());
@@ -233,7 +233,7 @@ public class PersistentDataStore {
   }
   /** Writes an Event object to the DataStore service.*/
   public void writeThrough(Event event) {
-    Entity eventEntity = new Entity("chat-messages");
+    Entity eventEntity = new Entity("chat-events");
     eventEntity.setProperty("creation_time", event.getTimeStamp().toString());
     eventEntity.setProperty("event_type", event.getEventType().toString());
 

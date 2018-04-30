@@ -77,23 +77,33 @@
   </servlet-mapping>
 
   <servlet>
-
- 	<servlet-name>FollowingServlet</servlet-name>
- 	<servlet-class>codeu.controller.FollowingServlet</servlet-class>
+ 	  <servlet-name>FollowingServlet</servlet-name>
+ 	  <servlet-class>codeu.controller.FollowingServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
- 	<servlet-name>FollowingServlet</servlet-name>
- 	<url-pattern>/following</url-pattern>
-
+ 	  <servlet-name>FollowingServlet</servlet-name>
+ 	  <url-pattern>/following</url-pattern>
   </servlet-mapping>
-      <servlet-name>FeedServlet</servlet-name>
+
+  <servlet>
+    <servlet-name>FeedServlet</servlet-name>
     <servlet-class>codeu.controller.FeedServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
     <servlet-name>FeedServlet</servlet-name>
     <url-pattern>/activityfeed</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>PrivateFeedServlet</servlet-name>
+    <servlet-class>codeu.controller.PrivateFeedServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>PrivateFeedServlet</servlet-name>
+    <url-pattern>/privateactivityfeed</url-pattern>
   </servlet-mapping>
 
 </web-app>

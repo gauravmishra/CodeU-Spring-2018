@@ -13,6 +13,7 @@
 <%@ page import="codeu.model.store.basic.UserStore" %>
 
 
+
 <%
 List <Event> events = (List<Event>) request.getAttribute("events");
 %>
@@ -20,7 +21,7 @@ List <Event> events = (List<Event>) request.getAttribute("events");
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Activity Feed</title>
+	<title> Private Activity Feed</title>
 	<link rel="stylesheet" href="/css/main.css">
 	<style>
 		#activityfeed {
@@ -52,29 +53,42 @@ List <Event> events = (List<Event>) request.getAttribute("events");
      <a href="/activityfeed">Activity Feed</a>
   </nav>
   	<div id="container">
-  		<h1>Activity Feed</h1>
+  		<h1>Private Activity Feed</h1>
       <hr/>
-  		<div id="activityfeed">
-  			<ul>
-  				<%
-  				for (Event event : events) {
-  					String message = event.toString();
-  				%>
-  				<li>
-  					<strong><%= message%> </strong>
-  				</li>
-  				<%
-  			}
-  			%>
-  		</ul>
+  		<div id="privateactivityfeed">
+        <ul>
+          <%
+          User user = (User) UserStore.getInstance().getUser((String) request.getSession().getAttribute("user"));
+          for (Event event : events) {
+          if (event.getEventType() == "message-event") {
+            NewMessageEvent tempEvent = (NewMessageEvent) event;
+            if (user.getFollowing().contains(tempEvent.getUserName())) {
+              String message = tempEvent.toString();
+              %>
+              <li>
+                <strong><%= message%> </strong>
+              </li>
+            <%
+            }
+          }
+          else if (event.getEventType() == "login-event") {
+            LoginLogoutEvent tempEvent = (LoginLogoutEvent) event;
+            if (user.getFollowing().contains(tempEvent.getUserName())) {
+              String message = tempEvent.toString();
+              %>
+              <li>
+                <strong><%= message%> </strong>
+              </li>
+              <%
+            }
+          }
+        }
+        %>
+      </ul>
   	</div>
-    <form action="/privateactivityfeed" method="POST">
-     <button type="submit">Private Activity Feed</button>
-   </form>
+    <form id="personalizeForm" action="/activityfeed" method="POST">
+      <button type="submit">Global Activity Feed</button>
+    </form>
   </div>
 </body>
 </html>
-
-
-
-

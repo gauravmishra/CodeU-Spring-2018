@@ -29,7 +29,6 @@ public class Conversation {
   public final UUID owner;
   public final Instant creation;
   public final String title;
-  public final boolean isPrivate;
   public List<User> isVisibleTo = new ArrayList<User>();
 
   /**
@@ -48,12 +47,11 @@ public class Conversation {
     // sets isPrivate to default false
     isPrivate = false;
   }
-  public Conversation(UUID id, UUID owner, String title, Instant creation, boolean isPrivate, List<User> isVisibleTo) {
+  public Conversation(UUID id, UUID owner, String title, Instant creation, List<User> isVisibleTo) {
     this.id = id;
     this.owner = owner;
     this.creation = creation;
     this.title = title;
-    this.isPrivate = isPrivate;
     this.isVisibleTo = isVisibleTo;
   }
 
@@ -77,11 +75,7 @@ public class Conversation {
     return creation;
   }
 
-  /** Returns the privacy setting on the Conversation */
-  public boolean getPrivacy(){
-    return isPrivate;
-  }
-
+  /** Returns the List of users following the conversation. */
   public List<User> getFollowedUsers(){
     return isVisibleTo;
   }

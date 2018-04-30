@@ -39,10 +39,11 @@ public class NewConversationEvent extends Event {
 
     @Override
     public String toString() {
-        return  "A new conversation \"" +
-                " " +this.conversationName + "\"" +
-                " ( " + this.conversationLink + " )" +
-                " was created at" +
-                " " + super.timeStamp.toString() + "\n";
+        //return  "A new conversation \"" +
+                //" " +this.conversationName + "\"" +
+                //" ( " + this.conversationLink + " )" +
+                //" was created at" +
+                //" " + super.timeStamp.toString() + "\n";
+        return "A new conversation " + "<a href=\"/chat/" + conversationName + "\">" + conversationName + "</a>" + " has been created at " + super.timeStamp.toString();
     }
 }

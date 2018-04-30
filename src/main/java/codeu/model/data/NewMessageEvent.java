@@ -61,11 +61,6 @@ public class NewMessageEvent extends Event {
 
     @Override
     public String toString() {
-        return  this.userName +
-                " ( " + this.userLink + " )" +
-                " has sent a new message on" +
-                " " + conversationName +
-                " ( " + conversationLink + " ) at" +
-                " " + super.timeStamp.toString() + "\n";
+        return this.userName + " has sent a new message on " + "<a href=\"/chat/" + conversationName + "\">" + conversationName + "</a> at " + super.timeStamp.toString();
     }
 }

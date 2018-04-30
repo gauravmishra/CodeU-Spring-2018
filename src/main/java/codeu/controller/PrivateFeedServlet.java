@@ -1,4 +1,3 @@
-
 package codeu.controller;
 
 import codeu.model.data.Event;
@@ -13,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 /** Servlet class responsible for the Activity Feed page. */
-public class FeedServlet extends HttpServlet {
+public class PrivateFeedServlet extends HttpServlet {
 	private EventStore eventStore;
 	/**
    * Set up state for handling conversation-related requests. This method is only called when
@@ -40,16 +39,18 @@ public class FeedServlet extends HttpServlet {
    */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws IOException, ServletException {
+      throws IOException, ServletException {    
     List<Event> events = eventStore.getAllEvents();
     request.setAttribute("events", events);
-    request.getRequestDispatcher("/WEB-INF/view/activityfeed.jsp").forward(request, response);
+    request.getRequestDispatcher("/WEB-INF/view/privateactivityfeed.jsp").forward(request, response);
+    
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
      throws IOException, ServletException {
 
-    response.sendRedirect("/activityfeed");
+    response.sendRedirect("/privateactivityfeed");
+
  }
 }

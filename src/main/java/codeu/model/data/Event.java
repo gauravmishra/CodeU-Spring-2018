@@ -23,4 +23,5 @@ public abstract class Event {
     	this.eventType = eventType;
     }
 
+
 }
