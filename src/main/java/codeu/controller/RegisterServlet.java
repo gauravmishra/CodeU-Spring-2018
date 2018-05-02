@@ -1,9 +1,12 @@
 package codeu.controller;
 
-import codeu.model.store.basic.UserStore;
-import codeu.model.data.User;
-import org.mindrot.jbcrypt.BCrypt;
 
+import codeu.model.data.User;
+import codeu.model.data.Event;
+import codeu.model.data.NewUserEvent;
+import codeu.model.store.basic.UserStore;
+import codeu.model.store.basic.EventStore;
+import org.mindrot.jbcrypt.BCrypt;
 import java.time.Instant;
 import java.util.UUID;
 import java.io.IOException;
@@ -25,10 +28,14 @@ public class RegisterServlet extends HttpServlet {
   * Set up state for handling registration-related requests. This method is only called when
   * running in a server, not when running in a test.
   */
+
+ private EventStore eventStore;
+
  @Override
  public void init() throws ServletException {
    super.init();
    setUserStore(UserStore.getInstance());
+   setEventStore(EventStore.getInstance());
  }
  
  /**
@@ -38,6 +45,15 @@ public class RegisterServlet extends HttpServlet {
  void setUserStore(UserStore userStore) {
    this.userStore = userStore;
  }
+
+ /**
+ * Sets the EventStore used by this Servlet. This function provides a common setup method
+ * for use by the test framework or the servlet's init() function.
+ */
+ void setEventStore(EventStore eventStore) {
+  this.eventStore = eventStore;
+ }
+
 /**
 * doGet function will eventually output HTML directly from servlet
 */
@@ -70,7 +86,8 @@ public class RegisterServlet extends HttpServlet {
    /** Adds user to the userStore database. Then redirects the user to page. */
    User user = new User(UUID.randomUUID(), username, passwordHash, Instant.now(), "");
    userStore.addUser(user);
-
+   Event event = new NewUserEvent(username, "placeholderLink", Instant.now(), "register-event");
+   eventStore.addEvent(event);
    response.sendRedirect("/login");
  }
 }

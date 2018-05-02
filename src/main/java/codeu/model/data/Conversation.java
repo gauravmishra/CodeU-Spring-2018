@@ -16,6 +16,8 @@ package codeu.model.data;
 
 import java.time.Instant;
 import java.util.UUID;
+import java.util.List;
+import java.util.ArrayList;
 import codeu.model.data.User;
 
 /**
@@ -27,8 +29,7 @@ public class Conversation {
   public final UUID owner;
   public final Instant creation;
   public final String title;
-  public final boolean isPrivate;
-  public final List<User> isVisibleTo;
+  public List<User> isVisibleTo = new ArrayList<User>();
 
   /**
    * Constructs a new Conversation.
@@ -43,13 +44,14 @@ public class Conversation {
     this.owner = owner;
     this.creation = creation;
     this.title = title;
+    // sets isPrivate to default false
+    isPrivate = false;
   }
-  public Conversation(UUID id, UUID owner, String title, Instant creation, boolean isPrivate, List<User> isVisibleTo) {
+  public Conversation(UUID id, UUID owner, String title, Instant creation, List<User> isVisibleTo) {
     this.id = id;
     this.owner = owner;
     this.creation = creation;
     this.title = title;
-    this.isPrivate = isPrivate;
     this.isVisibleTo = isVisibleTo;
   }
 
@@ -73,11 +75,7 @@ public class Conversation {
     return creation;
   }
 
-  /** Returns the privacy setting on the Conversation */
-  public boolean getPrivacy(){
-    return isPrivate;
-  }
-
+  /** Returns the List of users following the conversation. */
   public List<User> getFollowedUsers(){
     return isVisibleTo;
   }

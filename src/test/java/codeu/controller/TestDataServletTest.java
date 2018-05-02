@@ -14,6 +14,7 @@
 
 package codeu.controller;
 
+import codeu.model.store.basic.EventStore;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
@@ -37,6 +38,7 @@ public class TestDataServletTest {
   private ConversationStore mockConversationStore;
   private MessageStore mockMessageStore;
   private UserStore mockUserStore;
+  private EventStore mockEventStore;
 
   @Before
   public void setup() {
@@ -59,6 +61,10 @@ public class TestDataServletTest {
 
     mockUserStore = Mockito.mock(UserStore.class);
     testDataServlet.setUserStore(mockUserStore);
+
+    mockEventStore = Mockito.mock(EventStore.class);
+    testDataServlet.setEventStore(mockEventStore);
+
   }
 
   @Test
@@ -77,6 +83,7 @@ public class TestDataServletTest {
     Mockito.verify(mockUserStore).loadTestData();
     Mockito.verify(mockConversationStore).loadTestData();
     Mockito.verify(mockMessageStore).loadTestData();
+    Mockito.verify(mockEventStore).loadTestData();
     Mockito.verify(mockResponse).sendRedirect("/");
   }
 
@@ -90,6 +97,7 @@ public class TestDataServletTest {
     Mockito.verify(mockUserStore, Mockito.never()).loadTestData();
     Mockito.verify(mockConversationStore, Mockito.never()).loadTestData();
     Mockito.verify(mockMessageStore, Mockito.never()).loadTestData();
+    Mockito.verify(mockEventStore, Mockito.never()).loadTestData();
     Mockito.verify(mockResponse).sendRedirect("/");
   }
 }

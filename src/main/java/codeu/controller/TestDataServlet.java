@@ -13,10 +13,11 @@
 // limitations under the License.
 
 package codeu.controller;
-
+import codeu.model.store.basic.EventStore;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
+import codeu.model.store.basic.EventStore;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -35,6 +36,9 @@ public class TestDataServlet extends HttpServlet {
   /** Store class that gives access to Users. */
   private UserStore userStore;
 
+  /** Store class that gives access to Events. */
+  private EventStore eventStore;
+
   /** Set up state for handling the load test data request. */
   @Override
   public void init() throws ServletException {
@@ -42,6 +46,7 @@ public class TestDataServlet extends HttpServlet {
     setConversationStore(ConversationStore.getInstance());
     setMessageStore(MessageStore.getInstance());
     setUserStore(UserStore.getInstance());
+    setEventStore(EventStore.getInstance());
   }
 
   /**
@@ -69,6 +74,14 @@ public class TestDataServlet extends HttpServlet {
   }
 
   /**
+   * Sets the EventStore used by this servlet. This function provides a common setup method for use
+   * by the test framework or the servlet's init() function.
+   */
+  void setEventStore(EventStore eventStore) {
+    this.eventStore = eventStore;
+  }
+
+  /**
    * This function fires when a user requests the /testdata URL. It simply forwards the request to
    * testdata.jsp.
    */
@@ -91,6 +104,7 @@ public class TestDataServlet extends HttpServlet {
       userStore.loadTestData();
       conversationStore.loadTestData();
       messageStore.loadTestData();
+      eventStore.loadTestData();
     }
 
     response.sendRedirect("/");
