@@ -104,6 +104,15 @@
   <servlet-mapping>
     <servlet-name>PrivateFeedServlet</servlet-name>
     <url-pattern>/privateactivityfeed</url-pattern>
+
+  <servlet>
+    <servlet-name>ProfileServlet</servlet-name>
+    <servlet-class>codeu.controller.ProfileServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>ProfileServlet</servlet-name>
+    <url-pattern>/user/*</url-pattern>
   </servlet-mapping>
 
 </web-app>
