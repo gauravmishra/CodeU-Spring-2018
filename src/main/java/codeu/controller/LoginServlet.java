@@ -15,9 +15,11 @@
 package codeu.controller;
 
 import codeu.model.data.User;
+import codeu.model.data.Event;
+import codeu.model.data.LoginLogoutEvent;
 import codeu.model.store.basic.UserStore;
+import codeu.model.store.basic.EventStore;
 import org.mindrot.jbcrypt.BCrypt;
-
 import java.io.IOException;
 import java.time.Instant;
 import java.util.UUID;
@@ -32,6 +34,9 @@ public class LoginServlet extends HttpServlet {
   /** Store class that gives access to Users. */
   private UserStore userStore;
 
+  /** Store class that gives access to Events. */
+  private EventStore eventStore;
+
   /**
    * Set up state for handling login-related requests. This method is only called when running in a
    * server, not when running in a test.
@@ -40,6 +45,7 @@ public class LoginServlet extends HttpServlet {
   public void init() throws ServletException {
     super.init();
     setUserStore(UserStore.getInstance());
+    setEventStore(EventStore.getInstance());
   }
 
   /**
@@ -48,6 +54,14 @@ public class LoginServlet extends HttpServlet {
    */
   void setUserStore(UserStore userStore) {
     this.userStore = userStore;
+  }
+
+  /**
+  * Sets the EventStore used by this servlet. This function provides a common setup method for use
+  * by the test framework or the servlet's init() function.
+  */
+  void setEventStore(EventStore eventStore) {
+    this.eventStore = eventStore;
   }
 
   /**
@@ -73,9 +87,22 @@ public class LoginServlet extends HttpServlet {
 
     if (userStore.isUserRegistered(username)) {
       User user = userStore.getUser(username);
-      if (BCrypt.checkpw(password, user.getPassword())) {
+      // if the password is correct, redirect user to conversations page
+      if(BCrypt.checkpw(password, user.getPassword())) {
         request.getSession().setAttribute("user", username);
+        Event event = new LoginLogoutEvent(username, "placeholderLink", Instant.now(), "login-event", true);
+        eventStore.addEvent(event);
         response.sendRedirect("/conversations");
+
+      }
+      // if the password isn't correct, redirect the user to login page again
+      else {
+        request.setAttribute("error", "Invalid password.");
+        request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
+      }
+    }
+    // if the username isn't registered within the UserStore, redirects the user to the login page
+    else {
       } else {
         request.setAttribute("error", "Invalid password.");
         request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);

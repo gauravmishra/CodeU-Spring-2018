@@ -15,9 +15,10 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Conversation;
+import codeu.model.data.Event;
 import codeu.model.data.Message;
-import codeu.model.data.User;
 import codeu.model.data.Profile;
+import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -76,6 +77,7 @@ public class DefaultDataStore {
   private List<User> users;
   private List<Conversation> conversations;
   private List<Message> messages;
+  private List<Event> events;
   private List<Profile> profiles;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
@@ -83,6 +85,7 @@ public class DefaultDataStore {
     users = new ArrayList<>();
     conversations = new ArrayList<>();
     messages = new ArrayList<>();
+    events = new ArrayList<>();
     profiles = new ArrayList<>();
 
     if (USE_DEFAULT_DATA) {
@@ -109,6 +112,10 @@ public class DefaultDataStore {
     return messages;
   }
 
+  public List<Event> getAllEvents() {
+    return events;
+  }
+
   public List<Profile> getAllProfiles() {
     return profiles;
   }
@@ -119,12 +126,11 @@ public class DefaultDataStore {
     Collections.shuffle(randomUsernames);
 
     for (int i = 0; i < DEFAULT_USER_COUNT; i++) {
-      User user =
-          new User(
-              UUID.randomUUID(),
-              randomUsernames.get(i),
-              BCrypt.hashpw("password", BCrypt.gensalt()),
-              Instant.now());
+      User user = new User(UUID.randomUUID(),
+          randomUsernames.get(i),
+          BCrypt.hashpw("password", BCrypt.gensalt()),
+          Instant.now(), "");
+
       PersistentStorageAgent.getInstance().writeThrough(user);
       users.add(user);
     }

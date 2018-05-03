@@ -16,6 +16,9 @@ package codeu.model.data;
 
 import java.time.Instant;
 import java.util.UUID;
+import java.util.List;
+import java.util.ArrayList;
+import codeu.model.data.User;
 
 /**
  * Class representing a conversation, which can be thought of as a chat room. Conversations are
@@ -26,6 +29,7 @@ public class Conversation {
   public final UUID owner;
   public final Instant creation;
   public final String title;
+  public List<User> isVisibleTo = new ArrayList<User>();
 
   /**
    * Constructs a new Conversation.
@@ -40,6 +44,15 @@ public class Conversation {
     this.owner = owner;
     this.creation = creation;
     this.title = title;
+    // sets isPrivate to default false
+    isPrivate = false;
+  }
+  public Conversation(UUID id, UUID owner, String title, Instant creation, List<User> isVisibleTo) {
+    this.id = id;
+    this.owner = owner;
+    this.creation = creation;
+    this.title = title;
+    this.isVisibleTo = isVisibleTo;
   }
 
   /** Returns the ID of this Conversation. */
@@ -60,5 +73,10 @@ public class Conversation {
   /** Returns the creation time of this Conversation. */
   public Instant getCreationTime() {
     return creation;
+  }
+
+  /** Returns the List of users following the conversation. */
+  public List<User> getFollowedUsers(){
+    return isVisibleTo;
   }
 }

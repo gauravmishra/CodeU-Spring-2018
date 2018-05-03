@@ -15,7 +15,9 @@
 package codeu.controller;
 
 import codeu.model.data.User;
+import codeu.model.data.Event;
 import codeu.model.store.basic.UserStore;
+import codeu.model.store.basic.EventStore;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -35,6 +37,7 @@ public class LoginServletTest {
   private HttpServletRequest mockRequest;
   private HttpServletResponse mockResponse;
   private RequestDispatcher mockRequestDispatcher;
+  private EventStore mockEventStore;
 
   @Before
   public void setup() {
@@ -42,6 +45,9 @@ public class LoginServletTest {
     mockRequest = Mockito.mock(HttpServletRequest.class);
     mockResponse = Mockito.mock(HttpServletResponse.class);
     mockRequestDispatcher = Mockito.mock(RequestDispatcher.class);
+
+    mockEventStore = Mockito.mock(EventStore.class);
+    loginServlet.setEventStore(mockEventStore);
     Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/login.jsp"))
         .thenReturn(mockRequestDispatcher);
   }
