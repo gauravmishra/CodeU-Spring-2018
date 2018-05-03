@@ -125,7 +125,7 @@ public class PersistentStorageAgent {
   /** Writes an Event object to the Datastore service. */
   public void writeThrough(Event event) {
     persistentDataStore.writeThrough(event);
-
+  }
   /** Write a Profile object to the Datastore service. */
   public void writeThrough(Profile profile) {
     persistentDataStore.writeThrough(profile);

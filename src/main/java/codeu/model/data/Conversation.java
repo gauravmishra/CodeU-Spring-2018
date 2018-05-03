@@ -45,7 +45,6 @@ public class Conversation {
     this.creation = creation;
     this.title = title;
     // sets isPrivate to default false
-    isPrivate = false;
   }
   public Conversation(UUID id, UUID owner, String title, Instant creation, List<User> isVisibleTo) {
     this.id = id;

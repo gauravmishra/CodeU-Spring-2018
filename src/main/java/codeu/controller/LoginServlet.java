@@ -103,11 +103,6 @@ public class LoginServlet extends HttpServlet {
     }
     // if the username isn't registered within the UserStore, redirects the user to the login page
     else {
-      } else {
-        request.setAttribute("error", "Invalid password.");
-        request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
-      }
-    } else {
       request.setAttribute("error", "That username was not found.");
       request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
     }
