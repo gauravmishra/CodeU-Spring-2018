@@ -1,6 +1,8 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 
 public class NewConversationEvent extends Event {
     private String conversationName;
@@ -39,11 +41,9 @@ public class NewConversationEvent extends Event {
 
     @Override
     public String toString() {
-        //return  "A new conversation \"" +
-                //" " +this.conversationName + "\"" +
-                //" ( " + this.conversationLink + " )" +
-                //" was created at" +
-                //" " + super.timeStamp.toString() + "\n";
-        return "A new conversation " + "<a href=\"/chat/" + conversationName + "\">" + conversationName + "</a>" + " has been created at " + super.timeStamp.toString();
+        LocalDateTime localdatetime = LocalDateTime.ofInstant(super.timeStamp,ZoneId.systemDefault());
+        DateTimeFormatter datetimeformatter = DateTimeFormatter.ofPattern("dd/MM/yy h:mm:ss a");
+        String time = localdatetime.format(datetimeformatter); 
+        return time + ": " + "A new conversation " + "<a href=\"/chat/" + conversationName + "\">" + conversationName + "</a>" + " has been created.\n";
     }
 }

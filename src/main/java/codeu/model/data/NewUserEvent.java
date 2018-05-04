@@ -1,6 +1,8 @@
 package codeu.model.data;
 
+import java.time.*;
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 
 public class NewUserEvent extends Event {
     private String userName;
@@ -39,9 +41,10 @@ public class NewUserEvent extends Event {
 
     @Override
     public String toString() {
-        return  this.userName +
-                " ( " + this.userLink + " )" +
-                " has registered at" +
-                " " + super.timeStamp.toString() + "\n";
+        LocalDateTime localdatetime = LocalDateTime.ofInstant(super.timeStamp,ZoneId.systemDefault());
+        DateTimeFormatter datetimeformatter = DateTimeFormatter.ofPattern("dd/MM/yy h:mm:ss a");
+        String time = localdatetime.format(datetimeformatter); 
+        return  time + ": " + "<a href=\"/user/" + this.userName + "\">" + this.userName + "</a>" +
+                " has registered.\n"; 
     }
 }

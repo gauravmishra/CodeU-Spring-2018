@@ -1,6 +1,9 @@
 package codeu.model.data;
 
+import java.time.*;
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+
 
 public class LoginLogoutEvent extends Event {
     public static boolean LOGGED_OUT = false;
@@ -52,16 +55,15 @@ public class LoginLogoutEvent extends Event {
 
     @Override
     public String toString() {
+        LocalDateTime localdatetime = LocalDateTime.ofInstant(super.timeStamp,ZoneId.systemDefault());
+        DateTimeFormatter datetimeformatter = DateTimeFormatter.ofPattern("dd/MM/yy h:mm:ss a");
+        String time = localdatetime.format(datetimeformatter); 
         if(this.inOrOut) {
-            return  this.userName +
-                    " ( " + this.userLink + " )" +
-                    " has logged in at" +
-                    " " + super.timeStamp.toString() + "\n";
+            return time + ": " + "<a href=\"/user/" + this.userName + "\">" + this.userName + "</a>" +
+                " has logged in.\n"; 
         } else {
-            return  this.userName +
-                    " ( " + this.userLink + " )" +
-                    " has logged out at" +
-                    " " + super.timeStamp.toString() + "\n";
+            return time + ": " + "<a href=\"/user/" + this.userName + "\">" + this.userName + "</a>" +
+                " has logged out.\n"; 
         }
     }
 }
