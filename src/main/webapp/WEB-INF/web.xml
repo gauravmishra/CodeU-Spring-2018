@@ -37,6 +37,16 @@
   </servlet-mapping>
 
   <servlet>
+    <servlet-name>ChangePasswordServlet</servlet-name>
+    <servlet-class>codeu.controller.ChangePasswordServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>ChangePasswordServlet</servlet-name>
+    <url-pattern>/changepassword</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
     <servlet-name>ConversationServlet</servlet-name>
     <servlet-class>codeu.controller.ConversationServlet</servlet-class>
   </servlet>
