@@ -80,20 +80,23 @@ public class ChangePasswordServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
     String oldpassword = request.getParameter("oldpassword");
-    String password = request.getParameter("password");
     String username = (String) request.getSession().getAttribute("user");
 
     if (userStore.isUserRegistered(username)) {
       User user = userStore.getUser(username);
-      if (BCrypt.checkpw(password, user.getPassword())) {
-        user.setPassword(oldpassword);
-        response.sendRedirect("/conversations");
+      if (BCrypt.checkpw(oldpassword, user.getPassword())) {
+        if (request.getParameter("update") != null) {
+          String newPassword = request.getParameter("newpassword");
+          user.setPassword(newPassword);
+          userStore.addUser(user);
+          response.sendRedirect("/conversations");
+        }
       } else {
         request.setAttribute("error", "Invalid password.");
         request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
       }
     } else {
-      request.setAttribute("error", "That username was not found.");
+      request.setAttribute("error", "No user logged in.");
       request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
     }
   }

@@ -188,6 +188,13 @@ public class PersistentDataStore {
 
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
+    // Delete user in entity if already present
+    Filter idFilter = new FilterPredicate("uuid", FilterOperator.EQUAL, user.getId().toString());
+    Query query = new Query("chat-users").setFilter(idFilter);
+    PreparedQuery results = datastore.prepare(query);
+    for (Entity entity : results.asIterable()) {
+      datastore.delete(entity.getKey());
+    }
     Entity userEntity = new Entity("chat-users");
     userEntity.setProperty("uuid", user.getId().toString());
     userEntity.setProperty("username", user.getName());
