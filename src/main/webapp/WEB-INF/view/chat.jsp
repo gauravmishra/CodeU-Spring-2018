@@ -17,6 +17,7 @@
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="java.util.UUID" %>
 <%
 Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
@@ -47,7 +48,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 <body onload="scrollChat()">
 
   <nav>
-    <a id="navTitle" href="/">CodeU Chat App</a>
+    <a id="navTitle" href="/">CodeU2 Chat App</a>
     <a href="/conversations">Conversations</a>
       <% if (request.getSession().getAttribute("user") != null) { %>
     <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
@@ -63,6 +64,36 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       <a href="" style="float: right">&#8635;</a></h1>
 
     <hr/>
+
+
+    <% if (request.getSession().getAttribute("user") != null) { %>
+    <form action="/chat/<%= conversation.getTitle() %>/add_user" method="POST">
+      <button type="submit">Add User</button>
+    </form>
+    <% } else { %>
+    <p><a href="/login">Login</a> to add and remove users.</p>
+    <% } %>
+
+    <% if (request.getSession().getAttribute("user") != null) { %>
+    <form action="/chat/<%= conversation.getTitle() %>/remove_user" method="POST">
+      <button type="submit">Remove User</button>
+    </form>
+    <% } %>
+
+
+    <%
+      UUID ownerId = conversation.getOwnerId();
+      UUID recipientId = conversation.getRecipientId();
+      String owner = UserStore.getInstance().getUser(ownerId).getName();
+      String recipient = UserStore.getInstance().getUser(recipientId).getName();
+    %>
+
+    <p>From: <%= owner %></p>
+    <p>To: <%= recipient %></p>
+
+    <hr/>
+
+
 
     <div id="chat">
       <ul>

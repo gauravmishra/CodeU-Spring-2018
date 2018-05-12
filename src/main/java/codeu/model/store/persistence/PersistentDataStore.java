@@ -97,9 +97,10 @@ public class PersistentDataStore {
       try {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
         UUID ownerUuid = UUID.fromString((String) entity.getProperty("owner_uuid"));
+        UUID recipientUuid = UUID.fromString((String) entity.getProperty("recipient_uuid"));
         String title = (String) entity.getProperty("title");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
-        Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime);
+        Conversation conversation = new Conversation(uuid, ownerUuid, recipientUuid, title, creationTime);
         conversations.add(conversation);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -146,7 +147,7 @@ public class PersistentDataStore {
     return messages;
   }
 
-  /** Write a User object to the Datastore service. */
+  /** Write a User object to the Datastore service (updates if it already exists). */
   public void writeThrough(User user) {
     Entity userEntity = new Entity("chat-users");
     userEntity.setProperty("uuid", user.getId().toString());
@@ -156,7 +157,7 @@ public class PersistentDataStore {
     datastore.put(userEntity);
   }
 
-  /** Write a Message object to the Datastore service. */
+  /** Write a Message object to the Datastore service (updates if it already exists). */
   public void writeThrough(Message message) {
     Entity messageEntity = new Entity("chat-messages");
     messageEntity.setProperty("uuid", message.getId().toString());
@@ -167,11 +168,12 @@ public class PersistentDataStore {
     datastore.put(messageEntity);
   }
 
-  /** Write a Conversation object to the Datastore service. */
+  /** Write a Conversation object to the Datastore service (updates if it already exists). */
   public void writeThrough(Conversation conversation) {
     Entity conversationEntity = new Entity("chat-conversations");
     conversationEntity.setProperty("uuid", conversation.getId().toString());
     conversationEntity.setProperty("owner_uuid", conversation.getOwnerId().toString());
+    conversationEntity.setProperty("recipient_uuid", conversation.getRecipientId().toString());
     conversationEntity.setProperty("title", conversation.getTitle());
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
     datastore.put(conversationEntity);

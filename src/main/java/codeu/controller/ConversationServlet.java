@@ -113,8 +113,21 @@ public class ConversationServlet extends HttpServlet {
       return;
     }
 
+    String recipient = request.getParameter("recipient");
+    if (!recipient.matches("[\\w*]*")) {
+      request.setAttribute("error", "Please enter only letters and numbers.");
+      request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
+      return;
+    }
+
+    if (!userStore.isUserRegistered(recipient)) {
+      request.setAttribute("error", "Invalid User.");
+      request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
+      return;
+    }
+
     Conversation conversation =
-        new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
+        new Conversation(UUID.randomUUID(), user.getId(), userStore.getUser(recipient).getId(), conversationTitle, Instant.now());
 
     conversationStore.addConversation(conversation);
     response.sendRedirect("/chat/" + conversationTitle);

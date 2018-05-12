@@ -15,6 +15,7 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -24,8 +25,10 @@ import java.util.UUID;
 public class Conversation {
   public final UUID id;
   public final UUID owner;
+  public final UUID recipient;
   public final Instant creation;
   public final String title;
+//  public List<UUID> users;
 
   /**
    * Constructs a new Conversation.
@@ -35,11 +38,15 @@ public class Conversation {
    * @param title the title of this Conversation
    * @param creation the creation time of this Conversation
    */
-  public Conversation(UUID id, UUID owner, String title, Instant creation) {
+  public Conversation(UUID id, UUID owner, UUID recipient, String title, Instant creation) {
     this.id = id;
     this.owner = owner;
+    this.recipient = recipient;
     this.creation = creation;
     this.title = title;
+
+//    this.addUser(owner);
+//    this.addUser(recipient);
   }
 
   /** Returns the ID of this Conversation. */
@@ -52,6 +59,11 @@ public class Conversation {
     return owner;
   }
 
+  /** Returns the ID of the User who created this Conversation. */
+  public UUID getRecipientId() {
+    return recipient;
+  }
+
   /** Returns the title of this Conversation. */
   public String getTitle() {
     return title;
@@ -60,5 +72,33 @@ public class Conversation {
   /** Returns the creation time of this Conversation. */
   public Instant getCreationTime() {
     return creation;
+  }
+
+  /** Returns the creation time of this Conversation. */
+//  public List<UUID> getUsers() {
+//    return users;
+//  }
+//
+//  public void addUser(UUID u) {
+//    users.add(u);
+//  }
+//
+//  public void removeUser(UUID u) {
+//    users.remove(u);
+//  }
+
+  public boolean hasUser(UUID u) {
+
+    //    return this.users.contains(u);
+
+    if (u.equals(owner)) {
+      return true;
+    }
+
+    if (u.equals(recipient)) {
+      return true;
+    }
+
+    return false;
   }
 }

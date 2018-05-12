@@ -129,29 +129,42 @@ public class ChatServlet extends HttpServlet {
     }
 
     String requestUrl = request.getRequestURI();
-    String conversationTitle = requestUrl.substring("/chat/".length());
+    String[] reqParams = requestUrl.split("/");
+    String conversationTitle = reqParams[2];
 
-    Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
-    if (conversation == null) {
-      // couldn't find conversation, redirect to conversation list
-      response.sendRedirect("/conversations");
-      return;
+    if (reqParams.length > 3 && reqParams[3].equals("add_user")) {
+      System.out.println("ADD USER");
     }
 
-    String messageContent = request.getParameter("message");
+    else if (reqParams.length > 3 && reqParams[3].equals("remove_user")) {
+      System.out.println("REMOVE USER");
+    }
 
-    // this removes any HTML from the message content
-    String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.none());
+    // send button
+    else {
+      Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
 
-    Message message =
-        new Message(
-            UUID.randomUUID(),
-            conversation.getId(),
-            user.getId(),
-            cleanedMessageContent,
-            Instant.now());
+      if (conversation == null) {
+        // couldn't find conversation, redirect to conversation list
+        response.sendRedirect("/conversations");
+        return;
+      }
 
-    messageStore.addMessage(message);
+      String messageContent = request.getParameter("message");
+
+      // this removes any HTML from the message content
+      String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.none());
+
+      Message message =
+          new Message(
+              UUID.randomUUID(),
+              conversation.getId(),
+              user.getId(),
+              cleanedMessageContent,
+              Instant.now());
+
+      messageStore.addMessage(message);
+    }
 
     // redirect to a GET request
     response.sendRedirect("/chat/" + conversationTitle);
